@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<head>
+  <title>COP</title>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="js/engine.js"></script>
+  <script type="text/javascript" src="js/read_epw.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+</head>
+<body>
+  <div class="container">
+
+    <h1><center>COOLING SEASONAL PERFOMANCE FACTOR</center></h1>
+
+    <div class="input-group mb-3">
+      <label class="custom-file-label" for="inputGroupFile01" id='epwfilename'>Select EPW</label>
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+      </div>
+    </div>
+	
+	<div class="form-group">
+		<label for="exampleFormControlSelect1">Operating hours</label>
+		<select class="form-control" id="exampleFormControlSelect1">
+			<option value='all'>24 hours</option>
+			<option value='night'>Nighttime</option>
+			<option value='day'>Daytime</option>
+		</select>
+	</div>
+    
+    <label for="powerfull">Power at 35°C</label>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Full in Watts</span>
+        </div>
+        <input type="text" class="form-control" id="powerfull" aria-describedby="basic-addon3" value='1080'>
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon2">Half in Watts</span>
+        </div>
+        <input type="text" class="form-control" id="powerhalf" aria-describedby="basic-addon3" value='432'>
+    </div>
+    
+    <label for="capacity">Capacity at 35°C</label>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">Full in Watts</span>
+        </div>
+        <input type="text" class="form-control" id="capacityfull" aria-describedby="basic-addon3" value='3600'>
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon4">Half in Watts</span>
+        </div>
+        <input type="text" class="form-control" id="capacityhalf" aria-describedby="basic-addon3" value='1600'>
+    </div>
+
+	<button class='btn btn-dark btn-lg btn-block' type="button" id='btnCalculate' onclick='main()'>Calculate</button>
+    
+	<br>
+    <h3 id="resultado"><center></center></h3>
+
+    <br>
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+  </div>
+
+  <script>
+
+    function graph(){
+        Highcharts.chart('container', {
+            chart: {
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Histogram adjusted according to the ISO 16358'
+            },
+            subtitle: {
+                text: file['name']
+            },
+            xAxis: [{
+                categories: range(21,50),
+                crosshair: true
+            }],
+            yAxis: [{ 
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Frequency',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 800,
+                verticalAlign: 'top',
+                y: 75,
+                floating: true,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || 
+                    'rgba(255,255,255,0.25)'
+            },
+            series: [{
+                name: 'Temperature bins',
+                type: 'column',
+                data: bins,
+                tooltip: {
+                    valueSuffix: ' hours'
+                }
+            }]
+        });
+    }
+
+  </script>
+
+</body>
