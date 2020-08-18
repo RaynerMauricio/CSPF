@@ -114,7 +114,9 @@ function calculateBins(contents){
 
    }
 
-  window.referenceBins = referenceBins
-  window.temperatureBins = temperatureBins.map(Math.round)
+  //window.referenceBins = referenceBins
+  //window.temperatureBins = temperatureBins.map(Math.round)
+
+  return temperatureBins.map(Math.round)
 
 }
