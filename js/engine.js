@@ -1,4 +1,4 @@
-var bins;
+var temperatureBins;
 
 function calculateCSPF(bins){
 
