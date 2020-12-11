@@ -6,9 +6,9 @@ function calculateCSPF(bins){
 	temp = range(21,50);
 
 	//fracBins = [0.055,	0.076,	0.091,	0.108,	0.116,	0.118,	0.116,	0.1,	0.083,	0.066,	0.041,	0.019,	0.006,	0.003,	0.002];
-	
+
 	// ####################
-		
+
 	var pFull35 = parseFloat(document.getElementById('powerfull').value);
 	var pHalf35 = parseFloat(document.getElementById('powerhalf').value);
 	var phiFull35 = parseFloat(document.getElementById('capacityfull').value);
@@ -17,11 +17,21 @@ function calculateCSPF(bins){
 	// ####################
 	phiFull29 = phiFull35*1.077;
 	pFull29 = pFull35*0.914;
-	phiHalf29 = phiHalf35*1.077;
-	pHalf29 = pHalf35*0.914;
 	cd = 0.25;
 	t0 = 20;
 	t100 = 35;
+
+	objph29 = document.getElementById('powerhalf29')
+	objch29 = document.getElementById('capacityhalf29')
+
+	if (objch29 != null && objph29 != null){
+		pHalf29 = objph29.value
+		phiHalf29 = objch29.value
+	}
+	else {
+		phiHalf29 = phiHalf35*1.077;
+		pHalf29 = pHalf35*0.914;
+	}
 
 	// ####################
 
@@ -133,7 +143,7 @@ function calculateCSPF(bins){
 	cstlFinal = lcst.reduce(sum, 0)
 	ccseFinal= ccse.reduce(sum, 0)
 	CSPF_result = cstlFinal/ccseFinal
-	
+
 	return CSPF_result
 }
 
@@ -148,5 +158,5 @@ function main(){
 window.onload = function what(){
 
 	document.getElementById('inputGroupFile01').addEventListener('change', read_epw, false)
-	
+
 };

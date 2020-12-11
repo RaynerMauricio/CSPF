@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>COP</title>
+  <title>CSPF</title>
   <meta charset="utf-8">
   <script type="text/javascript" src="js/engine.js"></script>
   <script type="text/javascript" src="js/read_epw.js"></script>
@@ -24,7 +24,7 @@
         <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
       </div>
     </div>
-	
+
 	<div class="form-group">
 		<label for="exampleFormControlSelect1">Operating hours</label>
 		<select class="form-control" id="exampleFormControlSelect1">
@@ -33,7 +33,7 @@
 			<option value='day'>Daytime</option>
 		</select>
 	</div>
-    
+
     <label for="powerfull">Power at 35°C</label>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
@@ -45,7 +45,7 @@
         </div>
         <input type="text" class="form-control" id="powerhalf" aria-describedby="basic-addon3" value='432'>
     </div>
-    
+
     <label for="capacity">Capacity at 35°C</label>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
@@ -58,8 +58,18 @@
         <input type="text" class="form-control" id="capacityhalf" aria-describedby="basic-addon3" value='1600'>
     </div>
 
-	<button class='btn btn-dark btn-lg btn-block' type="button" id='btnCalculate' onclick='main()'>Calculate</button>
-    
+  <br>
+
+  <button class='btn btn-dark btn-lg btn-block' type="button" id='btnAddRemove3pt' onclick='addRemoveOptional()'>ADD OR REMOVE OPTIONAL TEST</button>
+
+  <br>
+
+  <div id='optinalField'></div>
+
+  <br>
+
+	<button class='btn btn-dark btn-lg btn-block' type="button" id='btnCalculate' onclick='main()'>CALCULATE</button>
+
 	<br>
     <h3 id="resultado"><center></center></h3>
 
@@ -70,7 +80,31 @@
 
   <script>
 
-    function graph(){
+  function addRemoveOptional(){
+
+        if (document.getElementById("optinalField").innerText == ""){
+
+            optinal_string =  `<br><label for="capacity">Half at 29°C</label>
+                              <div class="input-group mb-3">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text" id="basic-addon3">Power in Watts</span>
+                                  </div>
+                                  <input type="text" class="form-control" id="powerhalf29" aria-describedby="basic-addon3">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text" id="basic-addon4">Capacity in Watts</span>
+                                  </div>
+                                  <input type="text" class="form-control" id="capacityhalf29" aria-describedby="basic-addon3">
+                              </div>`
+        }
+        else {
+            optinal_string = ""
+        }
+
+        document.getElementById("optinalField").innerHTML = optinal_string
+
+  };
+
+  function graph(){
         Highcharts.chart('container', {
             chart: {
                 zoomType: 'xy'
@@ -85,7 +119,7 @@
                 categories: range(21,50),
                 crosshair: true
             }],
-            yAxis: [{ 
+            yAxis: [{
                 labels: {
                     format: '{value}',
                     style: {
@@ -110,7 +144,7 @@
                 y: 75,
                 floating: true,
                 backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || 
+                    Highcharts.defaultOptions.legend.backgroundColor ||
                     'rgba(255,255,255,0.25)'
             },
             series: [{
