@@ -32,10 +32,10 @@ function splitRows(contents){
 }
 
 function filterBy(a, h, hF){
-		
+
 	var temperatureFiltered = [];
-	var temperatureNonFiltered = [];	
-	
+	var temperatureNonFiltered = [];
+
 	for(let i in a){
 		if (hF.includes(h[i])){
 			temperatureFiltered.push(a[i])
@@ -65,15 +65,17 @@ function read_epw(event) {
     contents[13] = contents[13].map(Number); // global horizontal radiation
     window.contents = contents
   }
+
+  document.getElementById('textSelectEpw').innerText = document.getElementById("epwupload").files[0].name
   reader.readAsText(file);
 
 }
 
 function calculateBins(contents){
 
-  operatingHours = document.getElementById('exampleFormControlSelect1').value
+  operatingHours = document.getElementById('operatingHours').value
   window.operatingHours = operatingHours;
-  
+
   var hourTemp;
 	var tempTemp;
 	var radTemp;
@@ -81,21 +83,21 @@ function calculateBins(contents){
 	hourTemp = contents[3];
 	tempTemp = contents[6];
 	radTemp = contents[13];
-    
+
 	if(operatingHours == 'night'){
-		
+
 		hourTemp = filterBy(hourTemp, radTemp, [0])[0]
 		tempTemp = filterBy(tempTemp, radTemp, [0])[0]
 		radTemp = filterBy(radTemp, radTemp, [0])[0]
-		
+
 	} else if(operatingHours == 'day'){
-		
+
 			hourTemp = filterBy(hourTemp, radTemp, [0])[1]
 			tempTemp = filterBy(tempTemp, radTemp, [0])[1]
 			radTemp = filterBy(radTemp, radTemp, [0])[1]
-			
+
 	}
-    
+
   referenceBins = range(21,50)
   temperatureBins = Array(referenceBins.length).fill(0);
 
@@ -105,7 +107,7 @@ function calculateBins(contents){
     temperatureBins[i] = realTemperature.length
 
     factor = (referenceBins[i]-20)/(33 - 20)
-    
+
     if (factor > 1){
       factor = 1
     }

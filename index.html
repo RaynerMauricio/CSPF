@@ -18,16 +18,54 @@
 
     <h1><center>COOLING SEASONAL PERFOMANCE FACTOR</center></h1>
 
-    <div class="input-group mb-3">
-      <label class="custom-file-label" for="inputGroupFile01" id='epwfilename'>Select EPW</label>
+
+    <!-- <div class="row"> -->
+      <div class="form-group row">
+        <div class="col-sm-6">
+      		<label for="calculation_method">Method</label>
+      		<select class="form-control" id="calculation_method" onchange="disable_operating_hours()">
+            <option value='idrs'>Only IDRS</option>
+      			<option value='idrs_cspf'>IDRS and CSPF</option>
+      		</select>
+        </div>
+        <div class="col-sm-6">
+          <label for="requirements">Requirements</label>
+          <select class="form-control" id="requirements" onchange="disable_optinal_input()">
+            <option value='mandatory'>Only mandatory</option>
+            <option value='mandatory_optinal'>Mandatory and optional</option>
+          </select>
+        </div>
+    	</div>
+    <!-- </div> -->
+
+    <div class="input-group my-3">
+       <div class="input-group-prepend">
+         <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+       </div>
+       <div class="custom-file">
+         <input type="file" class="custom-file-input" id="epwupload" aria-describedby="inputGroupFileAddon01" disabled>
+         <label class="custom-file-label" for="epwupload" id="textSelectEpw"></label>
+       </div>
+     </div>
+
+    <!-- <input type="file" class="custom-file-input" id="epwupload" style="display:none"> -->
+    <!-- <button class='btn btn-secondary btn-lg btn-block' type="button" id='btnepw' onclick='document.getElementById("epwupload").click()' disabled>SELECT EPW</button> -->
+
+    <!-- <div class="input-group mb-3">
+      <label class="custom-file-label" for="epwupload" id='epwfilename'>Select EPW</label>
       <div class="custom-file">
-        <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+        <input type="file" class="custom-file-input" id="epwupload" aria-describedby="inputGroupFileAddon01" style="display:none">
       </div>
-    </div>
+    </div> -->
+
+    <!-- <label for="upload">
+          <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+          <input type="file" id="upload" style="display:none">
+    </label> -->
 
 	<div class="form-group">
-		<label for="exampleFormControlSelect1">Operating hours</label>
-		<select class="form-control" id="exampleFormControlSelect1">
+		<label for="operatingHours">Operating hours</label>
+		<select class="form-control" id="operatingHours" disabled>
 			<option value='all'>24 hours</option>
 			<option value='night'>Nighttime</option>
 			<option value='day'>Daytime</option>
@@ -39,11 +77,11 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">Full in Watts</span>
         </div>
-        <input type="text" class="form-control" id="powerfull" aria-describedby="basic-addon3" value='1080'>
+        <input type="text" class="form-control" id="powerfull" aria-describedby="basic-addon3" value='760.80'>
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon2">Half in Watts</span>
         </div>
-        <input type="text" class="form-control" id="powerhalf" aria-describedby="basic-addon3" value='432'>
+        <input type="text" class="form-control" id="powerhalf" aria-describedby="basic-addon3" value='336.40'>
     </div>
 
     <label for="capacity">Capacity at 35°C</label>
@@ -51,22 +89,28 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon3">Full in Watts</span>
         </div>
-        <input type="text" class="form-control" id="capacityfull" aria-describedby="basic-addon3" value='3600'>
+        <input type="text" class="form-control" id="capacityfull" aria-describedby="basic-addon3" value='2637'>
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon4">Half in Watts</span>
         </div>
-        <input type="text" class="form-control" id="capacityhalf" aria-describedby="basic-addon3" value='1600'>
+        <input type="text" class="form-control" id="capacityhalf" aria-describedby="basic-addon3" value='1397.60'>
     </div>
 
-  <br>
+  <label for="capacity">Power at 29°C</label>
+  <div class="input-group mb-3">
+      <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon3">Half in Watts</span>
+      </div>
+      <input type="text" class="form-control" id="powerhalf29" aria-describedby="basic-addon3" disabled>
+  </div>
 
-  <button class='btn btn-dark btn-lg btn-block' type="button" id='btnAddRemove3pt' onclick='addRemoveOptional()'>ADD OR REMOVE OPTIONAL TEST</button>
-
-  <br>
-
-  <div id='optinalField'></div>
-
-  <br>
+  <label for="capacity">Capacity at 29°C</label>
+  <div class="input-group mb-3">
+      <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon4">Half in Watts</span>
+      </div>
+      <input type="text" class="form-control" id="capacityhalf29" aria-describedby="basic-addon3" disabled>
+  </div>
 
 	<button class='btn btn-dark btn-lg btn-block' type="button" id='btnCalculate' onclick='main()'>CALCULATE</button>
 
@@ -80,29 +124,37 @@
 
   <script>
 
-  function addRemoveOptional(){
+  function disable_operating_hours(){
+    obj = document.getElementById('calculation_method')
+    if (obj.value == "idrs"){
+      document.getElementById("operatingHours").value = ""
+      document.getElementById("operatingHours").disabled = true
+      document.getElementById('textSelectEpw').innerText = ""
+      document.getElementById("epwupload").disabled = true
+    }
+    else{
+      document.getElementById("operatingHours").value = "all"
+      document.getElementById("operatingHours").disabled = false
+      document.getElementById('textSelectEpw').innerText = "Select an EPW"
+      document.getElementById("epwupload").disabled = false
+    }
+  }
 
-        if (document.getElementById("optinalField").innerText == ""){
-
-            optinal_string =  `<br><label for="capacity">Half at 29°C</label>
-                              <div class="input-group mb-3">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text" id="basic-addon3">Power in Watts</span>
-                                  </div>
-                                  <input type="text" class="form-control" id="powerhalf29" aria-describedby="basic-addon3">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text" id="basic-addon4">Capacity in Watts</span>
-                                  </div>
-                                  <input type="text" class="form-control" id="capacityhalf29" aria-describedby="basic-addon3">
-                              </div>`
-        }
-        else {
-            optinal_string = ""
-        }
-
-        document.getElementById("optinalField").innerHTML = optinal_string
-
-  };
+  function disable_optinal_input(){
+    obj = document.getElementById('requirements')
+    if (obj.value == "mandatory_optinal"){
+      document.getElementById("powerhalf29").value = ""
+      document.getElementById("capacityhalf29").value = ""
+      document.getElementById("powerhalf29").disabled = false
+      document.getElementById("capacityhalf29").disabled = false
+    }
+    else {
+      document.getElementById("powerhalf29").value = ""
+      document.getElementById("capacityhalf29").value = ""
+      document.getElementById("powerhalf29").disabled = true
+      document.getElementById("capacityhalf29").disabled = true
+    }
+  }
 
   function graph(){
         Highcharts.chart('container', {

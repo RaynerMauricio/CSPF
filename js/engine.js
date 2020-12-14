@@ -144,19 +144,29 @@ function calculateCSPF(bins){
 	ccseFinal= ccse.reduce(sum, 0)
 	CSPF_result = cstlFinal/ccseFinal
 
+	console.log(bins, CSPF_result)
 	return CSPF_result
 }
 
 function main(){
-	temperatureBins = calculateBins(contents)
-	CSPF = calculateCSPF(temperatureBins)
+
 	IDRS = calculateCSPF([130, 167, 231, 271, 253, 226, 189, 149, 128, 111, 84, 60, 38, 22, 12, 5, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-	document.getElementById("resultado").innerHTML = "CSPF = " + String(CSPF.toFixed(2)) + ' and IDRS = ' + String(IDRS.toFixed(2))
-	graph()
+
+	if (document.getElementById("calculation_method").value == "idrs"){
+		document.getElementById("resultado").innerHTML = "IDRS = " + String(IDRS.toFixed(2))
+		document.getElementById("container").innerHTML = ""
+	}
+	else {
+		temperatureBins = calculateBins(contents)
+		CSPF = calculateCSPF(temperatureBins)
+		graph()
+		document.getElementById("resultado").innerHTML = "CSPF = " + String(CSPF.toFixed(2)) + ' and IDRS = ' + String(IDRS.toFixed(2))
+	}
 }
 
 window.onload = function what(){
 
-	document.getElementById('inputGroupFile01').addEventListener('change', read_epw, false)
+	document.getElementById('operatingHours').value = ""
+	document.getElementById('epwupload').addEventListener('change', read_epw, false)
 
 };
